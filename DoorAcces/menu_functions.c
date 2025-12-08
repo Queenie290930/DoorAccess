@@ -16,7 +16,7 @@ void displayMenu() {
 
 // Funktion som visar lampans färg och väntar en viss tid
 void showLamp(const char *color, int duration) {
-    printf("CURRENTLY LAMP IS: %s\n", color);
+    printf("\nCURRENTLY LAMP IS: %s\n", color);
     // Om duration är större än 0, vänta i så många sekunder
     if (duration > 0) {
         sleep(duration);
