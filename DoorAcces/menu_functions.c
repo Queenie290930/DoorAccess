@@ -113,7 +113,7 @@ void fakeCardScanning(AccessSystem *system) {
     while (1) {
         printf("\n***Please scan card to enter or X to go back to the main menu***\n");
         showLamp("OFF", 0); // Visar att lampan är av
-        printf("\n");
+        printf("\nEnter cardnumber ---> ");
         
         // Läser in användarens input (kortnummer eller X)
         readString("", input, sizeof(input));
