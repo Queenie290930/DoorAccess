@@ -4,6 +4,11 @@
 #include "access_system.h"
 #include "SafeInput.h"
 
+// ANSI color codes
+#define COLOR_RED     "\x1b[31m"
+#define COLOR_GREEN   "\x1b[32m"
+#define COLOR_RESET   "\x1b[0m"
+
 void displayMenu() {
     printf("\n======= ADMIN MENU =======\n");
     printf("1 Remote open door\n");
@@ -14,10 +19,17 @@ void displayMenu() {
     printf("\nType in your choice: ");
 }
 
-// Funktion som visar lampans färg och väntar en viss tid
 void showLamp(const char *color, int duration) {
-    printf("\nCURRENTLY LAMP IS: %s\n", color);
-    // Om duration är större än 0, vänta i så många sekunder
+    printf("\nCURRENTLY LAMP IS: ");
+    
+    if (strcmp(color, "GREEN") == 0) {
+        printf("%s%s%s\n", COLOR_GREEN, color, COLOR_RESET); // grön text
+    } else if (strcmp(color, "RED") == 0) {
+        printf("%s%s%s\n", COLOR_RED, color, COLOR_RESET); // röd text
+    } else {
+        printf("%s\n", color); // vanlig text för OFF
+    }
+    
     if (duration > 0) {
         sleep(duration);
     }
@@ -74,8 +86,11 @@ void addRemoveAccess(AccessSystem *system) {
     
     // Om kortet finns (index är inte -1)
     if (index != -1) {
-        printf("This card has %s", 
-               system->cards[index].hasAccess ? "ACCESS" : "NO ACCESS");
+        if (system->cards[index].hasAccess) {
+            printf("This card has %sACCESS%s", COLOR_GREEN, COLOR_RESET);
+        } else {
+            printf("This card has %sNO ACCESS%s", COLOR_RED, COLOR_RESET);
+        }
     } else {
         // Om kortet inte finns, kommer ett nytt kort skapas
         printf("Card %d not found in system. A new card will be created.", cardNumber);
@@ -88,13 +103,13 @@ void addRemoveAccess(AccessSystem *system) {
     if (choice == 1) {
         addOrUpdateCard(system, cardNumber, 1); // 1 = har access
         saveCardsToFile(system); // Sparar ändringarna till filen
-        printf("\nCard %d has been * GRANTED ACCESS *\n", cardNumber);
+        printf("\nCard %d has been * %sGRANTED ACCESS%s *\n", cardNumber, COLOR_GREEN, COLOR_RESET);
     } 
     // Om valet är 2, neka access
     else if (choice == 2) {
         addOrUpdateCard(system, cardNumber, 0); // 0 = ingen access
         saveCardsToFile(system); // Sparar ändringarna till filen
-        printf("\nCard %d has been * DENIED ACCESS *\n", cardNumber);
+        printf("\nCard %d has been * %sDENIED ACCESS%s *\n", cardNumber, COLOR_RED, COLOR_RESET);
     } 
     // Om valet är varken 1 eller 2
     else {
@@ -111,9 +126,9 @@ void fakeCardScanning(AccessSystem *system) {
     
     // Loop som fortsätter tills användaren skriver "X"
     while (1) {
-        printf("\n***Please scan card to enter or X to go back to the main menu***\n");
+        printf("\n***Please scan card to enter or X to go back to the main menu***\n\n");
         showLamp("OFF", 0); // Visar att lampan är av
-        printf("\nEnter cardnumber ---> ");
+        printf("\n\nEnter cardnumber or X ---> ");
         
         // Läser in användarens input (kortnummer eller X)
         readString("", input, sizeof(input));
