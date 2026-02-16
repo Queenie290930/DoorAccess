@@ -1,4 +1,6 @@
 # Door Access Control System
+<img width="606" height="953" alt="Skärmavbild 2026-02-16 kl  19 29 03" src="https://github.com/user-attachments/assets/88011cb9-07f8-4097-97a1-cf2232130910" />
+
 
 A C program for managing access cards to doors. School project in programming.
 
